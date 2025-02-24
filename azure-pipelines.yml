@@ -34,3 +34,8 @@ steps:
     vstsFeedPackagePublish: 'python-packa'
     versionOption: 'custom'
     versionPublish: '$(Build.BuildId).0.0'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)'
+    artifact: 'drop'
+    publishLocation: 'pipeline'
