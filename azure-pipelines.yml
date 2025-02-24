@@ -2,7 +2,7 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
-
+# archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 trigger:
 - main
 
@@ -33,4 +33,4 @@ steps:
     vstsFeedPublish: '483f9b79-d52c-4496-b36a-2264a3fb406d/c5bca795-ac81-4bf8-b7e9-9cdd83f17005'
     vstsFeedPackagePublish: 'python-packa'
     versionOption: 'custom'
-    versionPublish: '(Build.BuildId)'
+    versionPublish: '$(Build.BuildId)'
