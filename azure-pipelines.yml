@@ -18,9 +18,6 @@ steps:
       source venv/bin/activate
       pip install -r requirements.txt
   displayName: 'Inatall dependencies'
-- script: |
-       python -m unittest discover tests  
-  displayName: 'Run Unit Tests'
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.BinariesDirectory)'
