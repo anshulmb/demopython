@@ -24,4 +24,13 @@ steps:
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+    replaceExistingArchive: true 
+- task: UniversalPackages@0
+  inputs:
+    command: 'publish'
+    publishDirectory: '$(Build.ArtifactStagingDirectory)'
+    feedsToUsePublish: 'internal'
+    vstsFeedPublish: '483f9b79-d52c-4496-b36a-2264a3fb406d/c5bca795-ac81-4bf8-b7e9-9cdd83f17005'
+    vstsFeedPackagePublish: 'python-packa'
+    versionOption: 'custom'
+    versionPublish: '1.1.1'
