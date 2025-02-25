@@ -48,7 +48,7 @@ stages:
         command: 'publish'
         publishDirectory: '$(Build.ArtifactStagingDirectory)'
         feedsToUsePublish: 'internal'
-        vstsFeedPublish: 'YourFeedID'  # Replace with the CORRECT Feed ID
+        vstsFeedPublish: 'pythonfeed'  # Replace with the CORRECT Feed ID
         vstsFeedPackagePublish: '$(packageName)'
         versionOption: 'custom'
         versionPublish: '$(packageVersion)'
