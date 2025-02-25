@@ -42,14 +42,14 @@ stages:
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).0.0.zip'
         replaceExistingArchive: true
-
     - task: UniversalPackages@0
       displayName: 'Publish to Azure Artifacts'
       inputs:
         command: 'publish'
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'  # Directory containing the ZIP file
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'
         feedsToUsePublish: 'internal'
-        vstsFeedPublish: 'YourProjectID'  # Replace with your Project ID (or feed ID) - see explanation below
-        vstsFeedPackagePublish: '$(packageName)' # Package name defined above
+        vstsFeedPublish: 'YourFeedID'  # Replace with the CORRECT Feed ID
+        vstsFeedPackagePublish: '$(packageName)'
         versionOption: 'custom'
-        versionPublish: '$(packageVersion)'  # Package version defined above
+        versionPublish: '$(packageVersion)'
+    
