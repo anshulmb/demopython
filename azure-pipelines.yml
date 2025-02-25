@@ -9,33 +9,47 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.11'
-- script: |
-      python -m venv venv
-      source venv/bin/activate
-      pip install -r requirements.txt
-  displayName: 'Inatall dependencies'
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).0.0.zip'
-    replaceExistingArchive: true 
-- task: UniversalPackages@0
-  inputs:
-    command: 'publish'
-    publishDirectory: '$(Build.ArtifactStagingDirectory)'
-    feedsToUsePublish: 'internal'
-    vstsFeedPublish: '483f9b79-d52c-4496-b36a-2264a3fb406d/c5bca795-ac81-4bf8-b7e9-9cdd83f17005'
-    vstsFeedPackagePublish: 'python-packa'
-    versionOption: 'custom'
-    versionPublish: '$(Build.BuildId).0.0'
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifact: 'drop'
-    publishLocation: 'pipeline'
+variables:
+  pythonVersion: '3.11' # Set to your App Service Python version
+  artifactFeedName: 'pythonfeed'  # Replace with your Artifacts feed name
+  packageName: 'python-packa' # Replace with your desired package name (must be consistent in release)
+  packageVersion: '$(Build.BuildId).0.0' # Dynamic version based on build ID
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(pythonVersion)'
+      inputs:
+        versionSpec: '$(pythonVersion)'
+        architecture: 'x64'
+
+    - script: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+      displayName: 'Install dependencies'
+
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false  # Important: Do not include the root folder in the archive
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).0.0.zip'
+        replaceExistingArchive: true
+
+    - task: UniversalPackages@0
+      displayName: 'Publish to Azure Artifacts'
+      inputs:
+        command: 'publish'
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'  # Directory containing the ZIP file
+        feedsToUsePublish: 'internal'
+        vstsFeedPublish: 'YourProjectID'  # Replace with your Project ID (or feed ID) - see explanation below
+        vstsFeedPackagePublish: '$(packageName)' # Package name defined above
+        versionOption: 'custom'
+        versionPublish: '$(packageVersion)'  # Package version defined above
